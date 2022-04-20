@@ -43,6 +43,10 @@ class LoginController extends Controller
     
     /* Set login timestamp with login ip when user login*/	
 	protected function authenticated(Request $request, $user){
+        if (auth()->user()->user_role->role_id == 1) {
+            // echo "sadfas";die;
+             return redirect()->route('dashboard');
+         }
 		$user->last_login_at = Carbon::now()->toDateTimeString();
         $user->last_login_ip = $request->getClientIp();
         $user->timestamps    = false;

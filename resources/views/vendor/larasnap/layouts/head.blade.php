@@ -13,6 +13,7 @@
    <!-- Custom styles for this template-->
    <link href="{{ asset('vendor/larasnap/css/larasnap.min.css') }}" rel="stylesheet">
    <link href="{{ asset('vendor/larasnap/css/larasnap-custom.css') }}" rel="stylesheet">
+   <!-- <link rel="stylesheet" type="text/css" href="{{asset('css/eos.css')}}" rel="stylesheet"> -->
    <style>
    .bg-gradient-primary {
 		background: {{ config('larasnap.admin_sidebar.background') }};
