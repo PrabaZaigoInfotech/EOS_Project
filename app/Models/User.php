@@ -21,6 +21,7 @@ class User extends \LaraSnap\LaravelAdmin\Models\User
         'name',
         'email',
         'password',
+        'status'
     ];
 
     /**
@@ -43,5 +44,14 @@ class User extends \LaraSnap\LaravelAdmin\Models\User
     ];
     public function user_role() {
         return $this->hasOne(\App\Models\RoleUser::class);
+    }
+    public function userProfile(){
+        return $this->hasOne('App\Models\UserProfile');
+    }
+    public function badge(){
+        return $this->hasMany('App\Models\Backend\Badges\Badge');
+    }
+    public function assign_certificate() {
+        return $this->hasOne(AssignCertificate::class,'user_id','id');
     }
 }

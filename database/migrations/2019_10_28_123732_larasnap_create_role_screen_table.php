@@ -1,4 +1,4 @@
-<?php
+<?phpbigInteger
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,7 +14,7 @@ class LarasnapCreateRoleScreenTable extends Migration
     public function up()
     {
         Schema::create('role_screen', function (Blueprint $table) {
-			$table->bigInteger('role_id')->unsigned();
+			$table->('role_id')->unsigned();
             $table->bigInteger('screen_id')->unsigned();
 			
 			$table->foreign('role_id')
