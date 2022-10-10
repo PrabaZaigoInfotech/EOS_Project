@@ -25,19 +25,20 @@ class CertificateController extends Controller
         return view('backend.certificates.create');
     }
 
-    public function create1() {
+    public function create1(Request $request) {
         
         // $institution = Institution::get('institution_name');
+        $institution= Institution::all();
+        $role = $request->input('institution_name', null);
+        $data= $institution= Institution::all();
+        if($role)
+        {
+            $data = Institution::where('id',$role)->get();
 
-         $institution= Institution::all();
-        
-        
-        // dd($search);
-        
-        $data=Institution::all();
+        }
       
    
-        return view('backend.certificates.create1',compact('institution','data'));
+     return view('backend.certificates.create1',compact('institution','data'));
     }
     public function store(CourseRequest $request) {
         //dd($request->all());

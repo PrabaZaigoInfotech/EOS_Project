@@ -32,7 +32,10 @@ class CertificateCreateRequest extends FormRequest
             ],
             'date_completion' => [
                 'required',
-            ]
+            ],
+            'institution_name' => [
+                'required',
+            ],
         ];
     }
 }

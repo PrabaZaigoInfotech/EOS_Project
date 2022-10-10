@@ -71,6 +71,9 @@
                                         <td><img style="width: 50px; height: 50px;" src="<?php echo url(Storage::url("app/public/upload/institution/signature/" . $user->signature)); ?>"></td>
 
                                         <td>
+                                        <form id="deleteForm" action="{{route('institution.delete',$user->id)}}" method="GET">
+                                                @csrf
+                                                @method('GET')
 
                                             <a href="{{route('institution.show',$user->id)}}" title="View Admin"><button class="btn btn-info btn-sm" type="button"><i aria-hidden="true" class="fa fa-eye"></i></button></a>
 
@@ -82,9 +85,11 @@
                                             @endif
 
                                             <a href="{{route('institution.edit',$user->id)}}" title="Edit Admin"><button class="btn btn-primary btn-sm" type="button"><i aria-hidden="true" class="fa fa-pencil-square-o"></i></button></a>
-
-                                            <a href="{{route('institution.delete',$user->id)}}" title="Delete Admin"><button class="btn btn-danger btn-sm" type="button"><i aria-hidden="true" class="fa fa-trash"></i></button></a>
-
+                                            <!-- <a href="{{route('institution.delete',$user->id)}}" title="Delete Admin"><button class="btn btn-danger btn-sm" type="button"><i aria-hidden="true" class="fa fa-trash"></i></button></a> -->
+                                            
+                                            
+                                                <a onclick="deleteModel({{$user->id}})" title="Delete Admin"><button data-toggle="modal" data-target="#small" class="btn btn-danger btn-sm" type="button"><i aria-hidden="true" class="fa fa-trash"></i></button></a>
+                                            </form>
                                         </td>
                                     </tr>
                                     @empty
@@ -100,6 +105,27 @@
                             </div>
                         </div>
                     </form>
+
+                    <div class="modal fade text-left" id="small" tabindex="-1" role="dialog" aria-labelledby="myModalLabel19" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel19">Delete</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <input type="hidden" id="users_id">
+                                <div class="modal-body">
+                                    Are you sure you want to delete?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" onclick="triggerDelete()" id="delete-btn" class="btn btn-primary" data-dismiss="modal">Accept</button>
+                                    <button type="button" id="delete-btn" class="btn btn-danger" class="close" data-dismiss="modal" aria-label="Close">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,3 +135,22 @@
 <!-- Page Content End-->
 
 @endsection
+
+<script>
+    var roleDelteURL = "{{route('institution.delete',':id')}}"
+
+    function deleteModel(id) {
+        jQuery('#users_id').val(id);
+    }
+
+    function triggerDelete() {
+        var action_url = jQuery("#deleteForm").prop('action');
+        let roleId = jQuery('#users_id').val();
+
+        action_url = roleDelteURL.replace(':id', roleId);
+
+        jQuery("#deleteForm").attr('action', action_url);
+
+        jQuery("#deleteForm").submit();
+    }
+</script>

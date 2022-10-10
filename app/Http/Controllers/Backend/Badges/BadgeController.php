@@ -14,6 +14,7 @@ use App\Models\Backend\Courses\Course;
 use Illuminate\Support\Str;
 use App\Events\ImageUrl;
 use App\Models\AssignCertificate;
+use App\Models\institution;
 use Prophecy\Doubler\Generator\Node\ReturnTypeNode;
 
 class BadgeController extends Controller
@@ -97,10 +98,11 @@ class BadgeController extends Controller
         $assign_certificates=AssignCertificate::where('user_id',$id)->get();
         return view('backend.badges.assigncertificate.index',compact('assign_certificates'));
     }
-    public function assign_create()
+    public function assign_create(Request $request)
     {
+        $institution = Institution::all();
 
-    return view('backend.badges.assigncertificate.create');
+    return view('backend.badges.assigncertificate.create',compact('institution'));
     }
 
     public function assign_store(CertificateCreateRequest $request,$id)
@@ -111,6 +113,7 @@ class BadgeController extends Controller
 
         $assign_certificate=new AssignCertificate;
         $assign_certificate->user_id = $id;
+        $assign_certificate->institution_name=$request->institution_name;
         $assign_certificate->course_name = $request->course_name;
         $assign_certificate->total_hours = $request->total_hours;
         $assign_certificate->date_completion = date('Y-m-d', strtotime($request->date_completion));

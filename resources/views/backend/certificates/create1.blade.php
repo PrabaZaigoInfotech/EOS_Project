@@ -27,39 +27,52 @@
                    <div class="mb-4">
                      <div class="card-body card">
 
-                       <!-- select button -->
-                       <div class="col-lg-6 relative br-right">
-                         <div class="mb-0">
-                           <label for="institution_name">Select Institution Name: <small class="text-danger required" checked="">*</small></label>
-                           <select  onchange="this.form.submit()"name="institution_name"   class="form-control" id="institution_name" value="{{ old('institution_name') }}">
-                             <option value="" selected="selected">Select institute </option>
-                             @forelse($institution as $index => $roles)
-                             <option value="{{ $roles->id }}" {!! old('institution')==$roles->id ? : '' !!} >{{ $roles->institution_name }}</option>
-                             @empty
-                             @endforelse
-                           </select>
-                           @error('institution_name')
-                           <span class="text-danger">{{ $message }}</span>
-                           @enderror
+                       <form method="POST">
+                         @csrf
+                         @method('GET')
+                         <!-- select button -->
+                         <div class="col-lg-6 relative br-right">
+                           <div class="mb-0">
+                          
+                           
+                             <label for="institution_name">Select Institution Name: <small class="text-danger required" checked="">*</small></label>
+                             <select onchange="this.form.submit()" name="institution_name" class="form-control" id="institution_name">
+                             @if(isset($_POST['institution_name'])){echo $_POST['institution_name'];}
+                             @endif
+                             
+                             <option value="0">Select institute </option>
+                               @forelse($institution as $index => $roles)
+                               <option value="{{ $roles->id }}"  {!! old('institution')==$roles->id ? 'selected' : 'ssss' !!} >{{ $roles->institution_name }}</option>
+                               @empty
+                               @endforelse
+                             </select>
+                             @error('institution_name')
+                             <span class="text-danger">{{ $message }}</span>
+                             @enderror  
+                             
+                           </div>
                          </div>
-                       </div>
-                       <br>
-                      
-                       @forelse($data as $i => $datas)
-                       <tr>
-                         <td>Institution name -</td>
-                         <td>{{$datas->institution_name}}</td>
-                       </tr>
-                       <tr>
-                         <td>Logo -</td>
-                         <td>{{$datas->logo}}</td>
-                       </tr>
-                       <tr>
-                         <td>Signature -</td>
-                         <td>{{$datas->signature}}</td>
-                       </tr>
-                       @empty
-                       @endforelse
+                         <br>
+                       </form>
+                       @if(isset($_POST['institution_name'])&&!empty($_POST['institution_name']))
+
+                         @forelse($data as $index => $roles)
+                         <tr>
+                           <td>Institution name -</td>
+                           <td>{{$roles->institution_name}}</td>
+                         </tr>
+                         <tr>
+                           <td>Logo -</td>
+                           <td>{{$roles->logo}}</td>
+                         </tr>
+                         <tr>
+                           <td>Signature -</td>
+                           <td>{{$roles->signature}}</td>
+                         </tr>
+                         @empty
+                         @endforelse
+                     
+                         @endif
 
                        <div id="bd-wrapper" ng-controller="CanvasControls">
 
@@ -267,21 +280,16 @@
        reader.readAsDataURL(e.target.files[0]);
      }
      canvas.renderAll();
-     
    </script>
-
 <script>
-        < script type = "text/javascript" >
-            jQuery(document).ready(function() {
-                var search = jQuery('#searchs').val();
-                if (search.length > 0) {
-                    jQuery("#reset_button").show();
-                } else {
-                    jQuery("#reset_button").hide();
-                }
-            });
-    </script>
-    
+var institution_name=<?php
+  if(isset($_POST['institution_name'])&&!empty($_POST['institution_name'])){echo $_POST['institution_name'];}else{echo 0;}
+  ?>;
+$('[name=institution_name]').val(institution_name);
+</script>
+
+
+
    <script src="{{asset('kitchensink/js/kitchensink/utils.js')}}"></script>
    <script src="{{asset('kitchensink/js/kitchensink/app_config.js')}}"></script>
    <script src="{{asset('kitchensink/js/kitchensink/controller.js')}}"></script>
