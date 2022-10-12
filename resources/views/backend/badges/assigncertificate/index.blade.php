@@ -179,6 +179,7 @@ Learn more: https://developers.facebook.com/docs/sharing/webmasters -->
             </div>
             <div class="modal-body delete-modal text-center">
                 <p><img src="{{asset('images/sure.jpg')}}" alt=""></p>
+                <!-- <p><img src="{{asset('images/sure.jpg')}}" alt=""></p> -->
                 <h4><b>Are you sure?</b></h4>
                 <input type="hidden" value="" class="deleteAdmin">
                 <p>Do you really want to delete these record? this process cannot be undone.</p>
@@ -207,13 +208,13 @@ Learn more: https://developers.facebook.com/docs/sharing/webmasters -->
 
             success: function(result) {
 
-                // console.log("result", result);
+                 console.log("result", result);
                 //  alert("hi");  
                 var url1 = "https://www.whatsappimages.in/wp-content/uploads/2021/07/Top-HD-sad-quotes-for-whatsapp-status-in-hindi-Pics-Images-Download-Free.gif";
                 var url2 = "https://blockchain.zaigoinfotech.com/certificate/image/";
                 $('#badge_download_image').attr("href", url2 + `/` + result.messages);
-                var imagePath = `<p><img class="rounded mx-auto d-block" src='${url1}'></p>`;
-                $('.badge_image').html(imagePath);
+                var imagePath = `<p><img class="rounded mx-auto d-block" </p>`;
+                $('.badge_image').html(result.messages.image_svg);
                 // var imagePath = `<p><img src="` + url2 + `/` + result.messages.course.badge + `"></p>`;
 
                 $('.delete_action').html('<a href="#" data-toggle="modal"  data-target="#delete"  title="Delete Badge"><button type="button" deleteId=' + result.messages.id + ' class="btn btn-danger badge_delete"> Delete </button></a>');

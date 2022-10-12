@@ -26,7 +26,7 @@
                  <div class="col-md-9">
                    <div class="mb-4">
                      <div class="card-body card">
-
+                    <textarea id="SVGRasterizer" style="display:none"></textarea>
                        <form method="POST">
                          @csrf
                          @method('GET')
@@ -57,7 +57,10 @@
                        @if(isset($_POST['institution_name'])&&!empty($_POST['institution_name']))
 
                          @forelse($data as $index => $roles)
-                         <tr>
+                         <input type="hidden" value="{{$roles->institution_name}}" name="" id="institution_namen"> 
+                         <input type="hidden" value="{{url(Storage::url('app/public/upload/institution/logo/' . $roles->logo));}}" name="" id="institution_logo"> 
+                         <input type="hidden" value="{{$roles->signature}}" name="" id="institution_signature">
+                 <!--         <tr>
                            <td>Institution name -</td>
                            <td>{{$roles->institution_name}}</td>
                          </tr>
@@ -68,7 +71,7 @@
                          <tr>
                            <td>Signature -</td>
                            <td>{{$roles->signature}}</td>
-                         </tr>
+                         </tr> -->
                          @empty
                          @endforelse
                      
@@ -95,6 +98,7 @@
                                <input type="hidden" value="" id="canvasRasterizer" />
                                <button type="button" class="btn rect" ng-click="addRect()">Rectangle</button>
                                <input type="color" style="width:40px" bind-value-to="fill" class="btn-object-action">
+                                   <button type= "button" id="svg" class="btn" ng-click="rasterizeSVG()">SVG</button>
                                <!-- <button id="b" type="button" ng-click="rasterize()" value="Save as Image" ></button> -->
                                <!-- 
                           <button type="button" class="btn" click="addText()">Add text</button>
@@ -129,10 +133,13 @@
 
                          <div class="col-md-12 p-0">
                            <div class="cimg mb-3">
-                             <img src="{{asset('images/2.jpg')}}" onclick="getimage(this)">
+                             <button type="button" class="btn rect" onclick="addsText('{student_name}')">Student Name</button> 
+                                   <button type="button" class="btn rect" onclick="addsText('{course_name}')">Course Name</button>
+                                    <button type="button" class="btn rect" onclick="addsText('{completion_date}')">Completion Date</button>    <button type="button" class="btn rect" onclick="addsText('{total_hours}')">Total Hours</button><button type="button" class="btn rect" onclick="setimgp()">Logo</button><button type="button" class="btn rect" onclick="setimg()">Signature</button>
                            </div>
                            <div class="cimg mb-3">
                              <img src="{{asset('images/3.jpg')}}" onclick="getimage(this)">
+
                            </div>
                            <div class="cimg mb-3">
                              <img src="{{asset('images/4.jpg')}}" onclick="getimage(this)">
@@ -216,13 +223,20 @@
          /*canvas.loadFromJSON(val[i].story); //val has saved canvas
          canvas.toSVG(); //or to dataURL()*/
          var data = $("#canvasRasterizer").val();
+        $('#svg').click();
          //alert(data);
          var url = "{{url('admin/certificates/store')}}";
+         var svg=$("#SVGRasterizer").val();
+         var institution_name=$("#institution_name").val();
+ 
+
          $.ajax({
            url: url,
            type: "post",
            data: {
              'canimgbs': data,
+             'svg': svg,
+             'institution': institution_name,
              _token: '{{csrf_token()}}'
            },
            success: function(result) {
@@ -230,7 +244,41 @@
            },
          });
        });
+          $("#institution_name").change(function(){
+         var institution_name=$("#institution_namen").val();
+         var institution_logo=$("#institution_logo").val();
+         var institution_signature=$("#institution_signature").val();
+         //alert(institution_signature);
+
      });
+          
+     });
+     function setimg(){
+            var signature=$('#institution_signature').val();
+             var coord = getRandomLeftTop();
+
+           var image = new fabric.Image.fromURL(signature, function(image) {
+           image.set({
+             left: coord.left,
+             top: coord.top,
+             angle: getRandomInt(-10, 10)
+           }).scale(getRandomNum(0.1, 0.27))
+      .setCoords();
+          });
+        }    
+        function setimgp(){
+            var signature=$('#institution_logo').val();
+             var coord = getRandomLeftTop();
+
+           var image = new fabric.Image.fromURL(signature, function(image) {
+           image.set({
+             left: coord.left,
+             top: coord.top,
+             angle: getRandomInt(-10, 10)
+           }).scale(getRandomNum(0.1, 0.27))
+      .setCoords();
+          });
+        }
      var kitchensink = {};
      var canvas = new fabric.Canvas('canvas');
      const context = canvas.getContext('2d');
@@ -281,6 +329,17 @@
      }
      canvas.renderAll();
    </script>
+   <script type="text/javascript">function addsText(textvalue) { 
+  var oText = new fabric.Text(textvalue, { 
+    left: 100, 
+    top: 100 ,
+  });
+
+  canvas.add(oText);
+  oText.bringToFront();
+  canvas.setActiveObject(oText);
+
+}</script>
 <script>
 var institution_name=<?php
   if(isset($_POST['institution_name'])&&!empty($_POST['institution_name'])){echo $_POST['institution_name'];}else{echo 0;}

@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use App\Events\ImageUrl;
 use App\Models\AssignCertificate;
 use App\Models\institution;
+use App\Models\Certificate;
 use Prophecy\Doubler\Generator\Node\ReturnTypeNode;
 
 class BadgeController extends Controller
@@ -107,16 +108,27 @@ class BadgeController extends Controller
 
     public function assign_store(CertificateCreateRequest $request,$id)
     {
+        $institution_name=$request->institution_name;
+        $certicate = Certificate::where('institution_id',$institution_name)->with('institution')->first();
 
+              
         $badges = Badge::where('user_id',$id)->with('course')->get();
         $assign_certificates=AssignCertificate::where('user_id',$id)->get();
 
+        
         $assign_certificate=new AssignCertificate;
         $assign_certificate->user_id = $id;
         $assign_certificate->institution_name=$request->institution_name;
         $assign_certificate->course_name = $request->course_name;
         $assign_certificate->total_hours = $request->total_hours;
         $assign_certificate->date_completion = date('Y-m-d', strtotime($request->date_completion));
+        $phrase  = "You should eat fruits, vegetables, and fiber every day.";
+    $change_var = array("{student_name}", "{completion_date}", "{total_hours}", "{course_name}");
+    $new_var   = array("balaaaj", date('Y-m-d', strtotime($request->date_completion)), $request->total_hours, $request->course_name);
+$image_svg_upd = str_replace($change_var, $new_var, $certicate->image_svg);
+ $assign_certificate->image_svg = $image_svg_upd;
+/*dd($certicate->image_svg);
+$*/
         $assign_certificate->save();
 
         return view('backend.badges.assigncertificate.index',compact('badges','assign_certificates'));
